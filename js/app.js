@@ -1,10 +1,13 @@
 // Enemies our player must avoid
-var Enemy = function (x, y, speed) {
+var Enemy = function () {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
-    this.x = x;
-    this.y = y;
-    this.speed = speed;
+    var lanes = [50, 130, 220]; //y values for the different lanes
+    this.width = 100;
+    this.height = 100;
+    this.x = -101;
+    this.y = lanes[Math.floor(Math.random() * lanes.length)];
+    this.speed = Math.floor(Math.random() * (120 - 20)) + 20;
     this.sprite = 'images/enemy-bug.png';
 };
 
@@ -15,6 +18,11 @@ Enemy.prototype.update = function (dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     this.x += this.speed * 10 * dt;
+
+    //remove enemy from enemy array
+    if (this.x > 500) {
+        allEnemies.splice(allEnemies.indexOf(this), 1);
+    }
 };
 
 // Draw the enemy on the screen, required method for game
@@ -28,10 +36,18 @@ Enemy.prototype.render = function () {
 var Player = function () {
     this.x = 202;
     this.y = 300;
+    this.isDead = false;
+    this.won = false;
     this.sprite = 'images/char-boy.png';
 };
 
 Player.prototype.update = function () {
+    if (this.isDead || this.won) {
+        this.x = 202;
+        this.y = 300;
+    }
+    this.isDead = false;
+    this.won = false;
 };
 
 Player.prototype.render = function () {
@@ -48,6 +64,8 @@ Player.prototype.handleInput = function (direction) {
         case 'up':
             if (this.y - 83 >= 0) {
                 this.y -= 83;
+            } else {
+                this.won = true;
             }
             break;
         case 'right':
@@ -67,7 +85,10 @@ Player.prototype.handleInput = function (direction) {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var allEnemies = [new Enemy(0, 50, 10), new Enemy(0, 130, 20), new Enemy(0, 225, 30)];
+var allEnemies = [];
+window.setInterval(function () {
+    allEnemies.push(new Enemy());
+}, 500);
 var player = new Player();
 
 
