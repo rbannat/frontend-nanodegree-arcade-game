@@ -42,6 +42,8 @@ var Player = function () {
 };
 
 Player.prototype.update = function () {
+
+    //reset player if dead or won
     if (this.isDead || this.won) {
         this.x = 202;
         this.y = 300;
@@ -55,6 +57,8 @@ Player.prototype.render = function () {
 };
 
 Player.prototype.handleInput = function (direction) {
+
+    //change player position on input
     switch (direction) {
         case 'left':
             if (this.x - 101 >= 0) {
